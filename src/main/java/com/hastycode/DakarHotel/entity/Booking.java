@@ -45,6 +45,16 @@ public class Booking {
         this.totalNumOfGuest = this.numOfAdults + this.numOfChildren;
     }
 
+    public void setNumOfAdults(int numOfAdults) {
+        this.numOfAdults = numOfAdults;
+        calculateTotalNumberOfGuest();
+    }
+
+    public void setNumOfChildren(int numOfChildren) {
+        this.numOfChildren = numOfChildren;
+        calculateTotalNumberOfGuest();
+    }
+
     @Override
     public String toString() {
         return "Booking{" +
@@ -55,8 +65,9 @@ public class Booking {
                 ", numOfChildren=" + numOfChildren +
                 ", totalNumOfGuest=" + totalNumOfGuest +
                 ", bookingConfirmationCode='" + bookingConfirmationCode + '\'' +
-                ", user=" + user +
-                ", room=" + room +
+                // removing user and room to avoid recursive invocation
+//                ", user=" + user +
+//                ", room=" + room +
                 '}';
     }
 }
