@@ -9,6 +9,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Date;
+import java.util.function.Function;
 
 public class JWTUtils {
 
@@ -34,5 +35,16 @@ public class JWTUtils {
         return extractClaims(token, Claims::getSubject);
     }
 
+    private <T> T extractClaims(String token, Function<Claims, T> claimsTFunction) {
+        return claimsTFunction.apply(Jwts.parser().verifyWith(Key).build().parseSignedClaims(token).getPayload());
+    }
 
+    public boolean isValidToken(String token, UserDetails userDetails) {
+        final String userName = extractUsername(token);
+        return (userName.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    }
+
+    public boolean isTokenExpired (String token) {
+        return extractClaims(token, Claims::getExpiration).before(new Date());
+    }
 }
